@@ -16,7 +16,7 @@ const producer = kafka.producer()
 const getRandomNumber = () => Math.round(Math.random(10) * 1000)
 const createMessage = num => ({
   key: `key-${num}`,
-//  value: `value-${num}-${new Date().toISOString()}`,
+  //value: `value-${num}-${new Date().toISOString()}`,
   value: `{"name": "Erick"}`,
 
 })
