@@ -1,8 +1,8 @@
-const ip = require('ip')
+import { address } from 'ip'
 
-const { Kafka, CompressionTypes, logLevel } = require('kafkajs')
+import { Kafka, CompressionTypes, logLevel } from 'kafkajs'
 
-const host = process.env.HOST_IP || ip.address()
+const host = process.env.HOST_IP || address()
 
 const kafka = new Kafka({
   logLevel: logLevel.DEBUG,

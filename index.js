@@ -5,7 +5,7 @@ const { Kafka } = require('kafkajs')
 const kafka = new Kafka({
   clientId: 'my-app',
   brokers: [
-	  'my-kafka-0.my-kafka-headless.kafka-adsoftsito.svc.cluster.local:9092'
+	  "my-kafka-0.my-kafka-headless.er1ck-esp1n0sa.svc.cluster.local:9092"
 	  ]
 });
 
@@ -33,7 +33,7 @@ const run = async (username) => {
   	} 
       ],
     })
-   await producer.disconnect()
+    await producer.disconnect()
 }
 
 app.get('/like', (req, res, next) => {
