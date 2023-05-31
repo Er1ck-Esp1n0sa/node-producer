@@ -4,9 +4,8 @@ const { Kafka } = require('kafkajs')
 
 const kafka = new Kafka({
   clientId: 'my-app',
-  brokers: ["my-kafka-0.my-kafka-headless.er1ck-esp1n0sa.svc.cluster.local:9092"
-    //'localhost:9092'
-	  //'my-kafka-0.my-kafka-headless.kafka-adsoftsito.svc.cluster.local:9092'
+  brokers: [
+	  'my-kafka-0.my-kafka-headless.er1ck-esp1n0sa.svc.cluster.local:9092'
 	  ]
 });
 
@@ -19,60 +18,12 @@ app.options('*', cors());
 const port = 8080;
 
 app.get('/', (req, res, next) => {
-  res.send('kafka api - Erick Juarez Espinosa');
+  res.send('kafka api - BryanVRe');
 });
 
-/*Para las reacciones*/
-const runreaction = async (username, publication_id, reaction)=>{
-  await producer.connect()
-  await producer.send({
-    topic: 'reactions',
-    messages:[{
-      'value': `{"name":"${username}",
-                 "publication":"${publication_id}",
-                 "reaction":"${reaction}"}` 
-    }],
-  })
-  await producer.disconnect()
-}
 
-app.get('/reaction', (req, res, next) => {
-  const username = req.query.name;
-  const publication_id = req.query.publication_id;
-  const reaction = req.query.reaction;
-  res.send({ 'name' : username,
-             'publication' : publication_id,
-             'reaction': reaction} );
-  runreaction(username, publication_id, reaction).catch(e => console.error(`[example/producer] ${e.message}`, e))
-
-});
-
-/*Para los comentarios*/
-const runcomments = async (username, publication_id, comment)=>{
-  await producer.connect()
-  await producer.send({
-    topic: 'comments',
-    messages:[{
-      'value': `{"name":"${username}",
-                 "publication":"${publication_id}",
-                 "comment":"${comment}"}` 
-    }],
-  })
-  await producer.disconnect()
-}
-
-app.get('/comment', (req, res, next) => {
-  const username = req.query.name;
-  const publication_id = req.query.publication_id;
-  const comment = req.query.comment;
-  res.send({ 'name' : username,
-             'publication' : publication_id,
-             'comment': comment} );
-  runcomments(username, publication_id, comment).catch(e => console.error(`[example/producer] ${e.message}`, e))
-
-});
-
-/*const run = async (username) => {
+// topic username username=name
+const run = async (username) => {
 
     await producer.connect()
 //    await producer.send()
@@ -84,7 +35,7 @@ app.get('/comment', (req, res, next) => {
   	} 
       ],
     })
-    await producer.disconnect()
+   await producer.disconnect()
 }
 
 app.get('/like', (req, res, next) => {
@@ -92,7 +43,58 @@ app.get('/like', (req, res, next) => {
   res.send({ 'name' : username } );
   run(username).catch(e => console.error(`[example/producer] ${e.message}`, e))
 
-});*/
+});
+//node - topic reaction - uId=userId, oId=objectId, rId=reactionId
+const ruun = async (uId, oId, rId) => {
+
+  await producer.connect()
+//    await producer.send()
+  await producer.send({
+    topic: 'reactions',
+    messages: [ 
+{ 
+  'value': `{ "userId": "${uId}",  "objectId": "${oId}", "reactionId": "${rId}"}` 
+  } 
+    ],
+  })
+ await producer.disconnect()
+}
+
+app.get('/reaction', (req, res, next) => {
+const uId = req.query.userId;
+const oId = req.query.objectId;
+const rId = req.query.reactionId;
+res.send({'userId:': uId, 'objectId': oId,'reactionId' : rId } );
+ruun(uId, oId, rId).catch(e => console.error(`[example/producer] ${e.message}`, e))
+
+});
+
+//node - topic comments    uId=userId, oId=objectId, comment=message
+const r = async (uId, oId, comment) => {
+
+  await producer.connect()
+//    await producer.send()
+  await producer.send({
+    topic: 'comments',
+    messages: [ 
+  { 
+    'value': `{ "userId": "${uId}",  "objectId": "${oId}", "comment": "${comment}"}`
+  } 
+    ],
+  })
+ await producer.disconnect()
+}
+
+app.get('/comments', (req, res, next) => {
+const uId = req.query.userId;
+const oId = req.query.objectId;
+const comment = req.query.comment;
+res.send({'userId:': uId, 'objectId': oId,'comment' : comment} );
+r(uId, oId, comment).catch(e => console.error(`[example/producer] ${e.message}`, e))
+
+});
+
+
 
 app.listen(port,  () => 
 	console.log('listening on port ' + port
